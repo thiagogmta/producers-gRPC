@@ -5,6 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.grains
+    container_name: produtor-de-graos
     ports:
       - "50051:50051"
 
@@ -12,6 +13,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.water
+    container_name: produtor-de-agua
     ports:
       - "50052:50052"
 
@@ -19,6 +21,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.flour
+    container_name: produtor-de-farinha
     ports:
       - "50053:50053"
 
@@ -26,6 +29,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.bread
+    container_name: produtor-de-pao
     ports:
       - "50054:50054"
 
@@ -33,6 +37,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.client
+    container_name: client
     depends_on:
       - produtor-de-graos
       - produtor-de-agua

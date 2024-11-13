@@ -141,17 +141,24 @@ docker-compose run client
 
 ## Comandos Úteis
 
-- **Parar e remover contêineres:**
+```bash
+#Parar e remover contêineres:**
+docker-compose down
 
-   ```bash
-   docker-compose down
-   ```
+# Reiniciar contêineres:
+docker-compose restart
 
-- **Reiniciar contêineres:**
+# Parar todos os contêineres em execução
+docker stop $(docker ps -q)
 
-   ```bash
-   docker-compose restart
-   ```
+# Remover Todos os Contêineres Parados
+docker rm $(docker ps -aq)
+
+# Limpar Volumes e Redes Antigos
+docker volume prune -f
+docker network prune -f
+
+```
 
 ---
 
