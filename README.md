@@ -1,33 +1,57 @@
 
+# Distributed Resource Producers with gRPC
 
-## Configuração do ambiente e Criação do Arquivo Protobuf:
+Sistema distribuído de produtores de recursos usando gRPC em Go, que simula o fornecimento e consumo de itens como grãos, água, farinha e pão. Esse projeto utiliza o protocolo gRPC para comunicação entre serviços, permitindo ao cliente solicitar quantidades específicas de recursos e receber as informações de disponibilidade.
 
-O arquivo .proto define um serviço chamado Producer que possui uma função remota GetResource. Essa função permite que um cliente envie uma solicitação (informando uma quantidade desejada) e receba uma resposta contendo o nome do recurso e a quantidade disponível.
+## Funcionalidade
 
-Funcionamento:
-- O cliente faz uma requisição ResourceRequest com a quantidade que deseja.
-- O serviço Producer processa a requisição e retorna uma resposta ResourceResponse com o nome do recurso e a quantidade.
+Este projeto define um serviço chamado `Producer` por meio de um arquivo `.proto`, onde cada produtor (grãos, água, farinha e pão) processa solicitações enviadas pelo cliente e responde com o nome do recurso e a quantidade disponível.
 
-**Requisitos:**
-- Linguagem: Go (go version go1.23.2)
-- Framework gRPC (protoc, protoc-gen-go)
+### Funcionamento:
 
-```bash
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+1. O cliente faz uma requisição `ResourceRequest` com a quantidade desejada de um recurso.
+2. O serviço `Producer` processa a requisição e retorna uma resposta `ResourceResponse` com o nome do recurso e a quantidade disponível.
 
-export PATH=$PATH:/usr/local/go/bin
-```
+---
 
-```bash
-protoc --go_out=. --go-grpc_out=. producer.proto
-```
+## Requisitos
 
-Inici
+- **Linguagem:** Go (versão 1.23.2)
+- **Framework:** gRPC com `protoc` e `protoc-gen-go`
 
-### Implementação dos Serviços Produtores em Go:
+### Configuração do Ambiente
 
-Compilar os serviços:
+1. Instale o plugin `protoc-gen-go` para o Protobuf e o gRPC:
+
+   ```bash
+   go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+   go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+   ```
+
+2. Adicione o Go ao seu PATH:
+
+   ```bash
+   export PATH=$PATH:/usr/local/go/bin
+   ```
+
+3. Compile o arquivo `.proto` para gerar os arquivos Go necessários:
+
+   ```bash
+   protoc --go_out=. --go-grpc_out=. producer.proto
+   ```
+
+---
+
+## Implementação dos Serviços Produtores em Go
+
+Cada serviço produtor é implementado em Go para simular um recurso específico. Os arquivos principais para os serviços são:
+
+- **`grains.go`** - Produtor de grãos
+- **`water.go`** - Produtor de água
+- **`flour.go`** - Produtor de farinha
+- **`bread.go`** - Produtor de pão
+
+Para compilar os serviços, execute:
 
 ```bash
 go build -o produtor-de-graos grains.go
@@ -36,17 +60,30 @@ go build -o produtor-de-farinha flour.go
 go build -o produtor-de-pao bread.go
 ```
 
-Abrir um terminal para cada produtor e mais um terminal para executar o cliente. Executar em cada terminal os comandos:
+Abra um terminal para cada produtor e execute os comandos para iniciar cada serviço:
 
 ```bash
 ./produtor-de-graos
 ./produtor-de-agua
 ./produtor-de-farinha
 ./produtor-de-pao
+```
+
+Em outro terminal, execute o cliente:
+
+```bash
 go run client.go
 ```
 
-Construir as imagens Docker
+---
+
+## Configuração com Docker
+
+Para facilitar a execução e gerenciamento dos serviços, o projeto pode ser executado com Docker e Docker Compose.
+
+### Construir as Imagens Docker
+
+Para cada serviço produtor e para o cliente, crie uma imagem Docker:
 
 ```bash
 # Para o produtor de grãos
@@ -65,15 +102,15 @@ docker build -f Dockerfile.bread -t produtor-de-pao .
 docker build -f Dockerfile.client -t client .
 ```
 
-Executar os contêineres
+### Executar os Contêineres com Docker Compose
+
+Inicie todos os contêineres de uma vez usando o Docker Compose:
 
 ```bash
 docker-compose up
-
-para com
 ```
 
-Deverá receber uma saída como:
+Você deverá ver uma saída similar a:
 
 ```bash
 Creating produtores_produtor-de-agua_1    ... done
@@ -84,9 +121,48 @@ Creating produtores_client_1              ... done
 Attaching to produtores_produtor-de-pao_1, produtores_produtor-de-agua_1, produtores_produtor-de-graos_1, produtores_produtor-de-farinha_1, produtores_client_1
 ```
 
-Para executar o cliente em outro terminal
+Para executar o cliente em outro terminal, use:
 
 ```bash
 docker-compose run client
 ```
 
+---
+
+## Estrutura do Projeto
+
+- **`producer.proto`** - Arquivo Protobuf que define o serviço `Producer` e as mensagens `ResourceRequest` e `ResourceResponse`.
+- **`grains.go`, `water.go`, `flour.go`, `bread.go`** - Implementações dos serviços de cada produtor.
+- **`client.go`** - Cliente que envia solicitações para os produtores.
+- **Dockerfiles** - Arquivos de configuração Docker para cada serviço.
+- **`docker-compose.yml`** - Configuração Docker Compose para gerenciar todos os contêineres.
+
+---
+
+## Comandos Úteis
+
+- **Parar e remover contêineres:**
+
+   ```bash
+   docker-compose down
+   ```
+
+- **Reiniciar contêineres:**
+
+   ```bash
+   docker-compose restart
+   ```
+
+---
+
+## Licença
+
+Este projeto é disponibilizado sob a [MIT License](LICENSE).
+
+---
+
+## Contribuição
+
+Contribuições são bem-vindas! Sinta-se à vontade para abrir uma issue ou enviar um pull request.
+
+---
