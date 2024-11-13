@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  produtor-de-graos:
+    build:
+      context: .
+      dockerfile: Dockerfile.grains
+    ports:
+      - "50051:50051"
+
+  produtor-de-agua:
+    build:
+      context: .
+      dockerfile: Dockerfile.water
+    ports:
+      - "50052:50052"
+
+  produtor-de-farinha:
+    build:
+      context: .
+      dockerfile: Dockerfile.flour
+    ports:
+      - "50053:50053"
+
+  produtor-de-pao:
+    build:
+      context: .
+      dockerfile: Dockerfile.bread
+    ports:
+      - "50054:50054"
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    depends_on:
+      - produtor-de-graos
+      - produtor-de-agua
+      - produtor-de-farinha
+      - produtor-de-pao
+    stdin_open: true # Para permitir entrada interativa
+    tty: true         # Para permitir interface de linha de comando interativa

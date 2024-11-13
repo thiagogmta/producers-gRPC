@@ -1,0 +1,21 @@
+# Etapa de build
+FROM golang:1.23
+WORKDIR /app
+
+# Copia arquivos de dependência
+COPY go.mod go.sum ./
+
+# Baixa todas as dependências
+RUN go mod download
+
+# Copia o código-fonte e arquivos do protocolo gRPC
+COPY . .
+
+# Compila o serviço específico
+RUN go build -o produtor-de-graos grains.go
+
+# Porta em que o serviço escuta
+EXPOSE 50051
+
+# Executa o serviço
+CMD ["./produtor-de-graos"]

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package producer;
+option go_package = "/producer";
+
+service Producer {
+    rpc GetResource(ResourceRequest) returns (ResourceResponse);
+}
+
+message ResourceRequest {
+    int32 quantity = 1;
+}
+
+message ResourceResponse {
+    string resourceName = 1;
+    int32 quantity = 2;
+}
