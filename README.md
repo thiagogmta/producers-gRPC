@@ -97,10 +97,25 @@ docker build -f Dockerfile.flour -t produtor-de-farinha .
 
 # Para o produtor de pão
 docker build -f Dockerfile.bread -t produtor-de-pao .
-
-# Para o cliente
-docker build -f Dockerfile.client -t client .
 ```
+
+O cliente de teste foi desmembrado em quatro scripts (carga simples, carga sequencial, picos de carga e carga continua). Criaremos quatro imagens do docker uma para cada teste.
+
+```bash
+# Build para Carga Simples
+docker build -t thiagogmta/client_carga_simples -f Dockerfile.client_carga_simples .
+
+# Build para Carga Sequencial
+docker build -t thiagogmta/client_carga_sequencial -f Dockerfile.client_carga_sequencial .
+
+# Build para Picos de Carga
+docker build -t thiagogmta/client_picos_carga -f Dockerfile.client_picos_carga .
+
+# Build para Carga Contínua
+docker build -t thiagogmta/client_carga_continua -f Dockerfile.client_carga_continua .
+```
+
+
 
 ### Executar os Contêineres com Docker Compose
 
@@ -126,6 +141,35 @@ Para executar o cliente em outro terminal, use:
 ```bash
 docker-compose run client
 ```
+
+---
+
+## Enviando imagens para o docker hub
+
+```bash
+
+# Tagear imagens
+docker tag produtor-de-graos thiagogmta/produtor-de-graos:latest
+docker tag produtor-de-agua thiagogmta/produtor-de-agua:latest
+docker tag produtor-de-farinha thiagogmta/produtor-de-farinha:latest
+docker tag produtor-de-pao thiagogmta/produtor-de-pao:latest
+docker tag client thiagogmta/client:latest
+
+docker push thiagogmta/produtor-de-graos:latest
+docker push thiagogmta/produtor-de-agua:latest
+docker push thiagogmta/produtor-de-farinha:latest
+docker push thiagogmta/produtor-de-pao:latest
+docker push thiagogmta/client:latest
+
+
+# Clientes de testes
+docker push thiagogmta/client_carga_simples
+docker push thiagogmta/client_carga_sequencial
+docker push thiagogmta/client_picos_carga
+docker push thiagogmta/client_carga_continua
+
+```
+
 
 ---
 
